@@ -15,11 +15,11 @@ import jakarta.persistence.*;
 public class EmprestimoLivro {
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) private int id;
 
-	@Column(name = "cpf_do_mutuario", nullable = false)
+	@Column(name = "cpf_mutuario", nullable = false)
 	private String cpfMutuario;
 	
-	@Column(name = "cpf_do_mutuario", nullable = false)
-	private int id_livro
+	@Column(name = "cpf_livro", nullable = false)
+	private int idLivro;
 	
 	@Column(name = "inicio", nullable = false)
 	private Date inicio;
@@ -33,11 +33,12 @@ public class EmprestimoLivro {
 	@Column(name = "status", nullable = false)
 	private boolean status;
 
-	public EmprestimoLivro(String cpfMutuario, boolean status) {
+	public EmprestimoLivro(String cpfMutuario, Livro livro, boolean status) {
 		Instant start = Instant.now();
 		Instant later = start.plus(14, ChronoUnit.DAYS);
 		
 		this.cpfMutuario = cpfMutuario;
+		this.idLivro = livro.getId();
 		this.inicio = Date.from(start);
 		this.fim = Date.from(later);
 		this.dataDevolucao = null;
@@ -47,8 +48,9 @@ public class EmprestimoLivro {
 	public String getCpfMutuario() {
 		return cpfMutuario;
 	}
-	public void setCpfMutuario(String cpfMutuario) {
-		this.cpfMutuario = cpfMutuario;
+
+	public int getIdLivro() {
+		return idLivro;
 	}
 
 	public Date getInicioEmprestimo() {
@@ -97,7 +99,5 @@ public class EmprestimoLivro {
 		else {
 			return (double) Duration.between(dataDevolucao.toInstant(), inicio.toInstant()).toDays() * 1.0;
 		}
-		
 	}
-
 }

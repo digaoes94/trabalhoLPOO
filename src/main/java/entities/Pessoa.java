@@ -12,6 +12,8 @@ public abstract class Pessoa {
     @Column(name = "cpf_pessoa", unique = true, nullable = false)
     private String cpf;
 	private String email, celular;
+	
+	public Pessoa() {}
 
 	public Pessoa(String nome, String cpf, String email, String celular) {
 		this.nome = nome;

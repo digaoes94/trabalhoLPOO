@@ -49,10 +49,10 @@ public class Funcionario extends Pessoa {
 		return bancoDados.delete(id);
 	}
 	private Visitante refazerVisitante(ResultSet res) {
-		Visitante aux;
+		Visitante aux = new Visitante();
 		
 		while(res.next()) {
-			
+			aux.setNome(res.getString("Nome"));
 		}
 	}
 	
