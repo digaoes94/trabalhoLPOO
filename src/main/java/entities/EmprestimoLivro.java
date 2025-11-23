@@ -1,7 +1,11 @@
 package entities;
 
+import java.util.Date;
+import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import jakarta.persistence.*;
 
@@ -14,29 +18,29 @@ public class EmprestimoLivro {
 	@Column(name = "cpf_do_mutuario", nullable = false)
 	private String cpfMutuario;
 	
+	@Column(name = "cpf_do_mutuario", nullable = false)
 	private int id_livro
 	
-	@Column(name = "inicio_do_emprestimo", nullable = false)
-	private LocalDate inicioEmprestimo;
+	@Column(name = "inicio", nullable = false)
+	private Date inicio;
 	
-	@Column(name = "fim_do_emprestimo", nullable = false)
-	private LocalDate fimEmprestimo; // DATA PREVISTA PARA A ENTREGA
+	@Column(name = "fim", nullable = false)
+	private Date fim;
 	
-	@Column(name = "data_da_real_devolucao")
-	private LocalDate dataRealDevolucao; // DATA DEFINITIVA DA ENTREGA
+	@Column(name = "data_devolucao")
+	private Date dataDevolucao;
 	
 	@Column(name = "status", nullable = false)
 	private boolean status;
 
-	public EmprestimoLivro() {
-
-	}
-
-	public EmprestimoLivro(String cpfMutuario, LocalDate inicioEmprestimo, LocalDate fimEmprestimo,LocalDate dataRealDevolucao, boolean status) {
+	public EmprestimoLivro(String cpfMutuario, boolean status) {
+		Instant start = Instant.now();
+		Instant later = start.plus(14, ChronoUnit.DAYS);
+		
 		this.cpfMutuario = cpfMutuario;
-		this.inicioEmprestimo = inicioEmprestimo;
-		this.fimEmprestimo = fimEmprestimo;
-		this.dataRealDevolucao = dataRealDevolucao;
+		this.inicio = Date.from(start);
+		this.fim = Date.from(later);
+		this.dataDevolucao = null;
 		this.status = true;
 	}
 	
@@ -47,25 +51,27 @@ public class EmprestimoLivro {
 		this.cpfMutuario = cpfMutuario;
 	}
 
-	public LocalDate getInicioEmprestimo() {
-		return inicioEmprestimo;
-	}
-	public void setInicioEmprestimo(LocalDate inicioEmprestimo) {
-		this.inicioEmprestimo = inicioEmprestimo;
+	public Date getInicioEmprestimo() {
+		return inicio;
 	}
 
-	public LocalDate getFimEmprestimo() {
-		return fimEmprestimo;
+	public Date getFimEmprestimo() {
+		return fim;
 	}
-	public void setFimEmprestimo(LocalDate fimEmprestimo) {
-		this.fimEmprestimo = fimEmprestimo;
+	public void setFimEmprestimo(Date fim) {
+		this.fim = fim;
 	}
 
-	public LocalDate getDataRealDevolucao() {
-		return dataRealDevolucao;
-	}
-	public void setDataRealDevolucao(LocalDate dataRealDevolucao) {
-		this.dataRealDevolucao = dataRealDevolucao;
+	public void setDataDevolucao(Visitante v) {
+		this.dataDevolucao = Date.from(Instant.now());
+		
+		if(v instanceof Associado) {
+			Associado a = (Associado) v;
+			a.setDivida(a.getDivida() + calculaDivida());
+		}
+		else {
+			v.setDivida(v.getDivida() + calculaDivida());
+		}
 	}
 
 	public boolean isStatus() {
@@ -77,18 +83,21 @@ public class EmprestimoLivro {
 
 	@Override
 	public String toString() {
-		return "Emprestimo [id=" + id + ", cpfMutuario=" + cpfMutuario + ", inicioEmprestimo=" + inicioEmprestimo
-				+ ", fimEmprestimo=" + fimEmprestimo + ", dataRealDevolucao=" + dataRealDevolucao + ", status=" + status
+		return "Emprestimo [id=" + id + ", cpfMutuario=" + cpfMutuario + ", inicioEmprestimo=" + inicio
+				+ ", fimEmprestimo=" + fim + ", dataRealDevolucao=" + dataDevolucao + ", status=" + status
 				+ "]";
 	}
 	
 	public Double calculaDivida() {
-		if(LocalDateTime.now().isBefore(this.fimEmprestimo) || LocalDateTime.now().isEqual(this.fimEmprestimo)) {
+		int atraso = dataDevolucao.compareTo(fim);
+		
+		if(atraso == 0 || atraso < 0) {
 			return 0.0;
 		}
 		else {
-			return 1.0 * days;
+			return (double) Duration.between(dataDevolucao.toInstant(), inicio.toInstant()).toDays() * 1.0;
 		}
+		
 	}
 
 }

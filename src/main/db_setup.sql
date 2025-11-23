@@ -76,6 +76,12 @@ CREATE TABLE pdfs(
     Localização varchar(255),
     Executável bool
 );
-CREATE TABLE emprestimos(
+CREATE TABLE emprestimos_livro(
+
+);
+CREATE TABLE emprestimos_revista(
+
+);
+CREATE TABLE emprestimos_periodico(
 
 );

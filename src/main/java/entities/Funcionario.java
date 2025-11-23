@@ -1,5 +1,10 @@
 package entities;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import data.DB;
 import jakarta.persistence.*;
 
 @Entity // MARCA COMO UMA ENTIDADE JPA E SERÁ A TABELA PRINCIPAL
@@ -26,8 +31,13 @@ public class Funcionario extends Pessoa {
 		return super.toString() + " Funcionario [matriculaFuncionario=" + matriculaFuncionario + "]";
 	}
 	
-	public Visitante pesquisarVisitante(int id) {
-		return bancoDados.findById(id);
+	// CRUD VISITANTE  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	public Visitante pesquisarVisitante(int id) { //nas funções PESQUISAR seria sim interessante ter DAOs, mas isso é referência pro futuro
+		Connection conn = DB.getConnection();
+		Statement state = conn.createStatement();
+		ResultSet res = state.executeQuery(String.format("SELECT * FROM funcionarios WHERE funcionario.id = %s", id));
+		
+		return refazerVisitante(res);
 	}
 	public boolean adicionarVisitante(Visitante vis) {
 		return bancoDados.add(vis);
@@ -38,7 +48,15 @@ public class Funcionario extends Pessoa {
 	public boolean excluirVisitante(int id) {
 		return bancoDados.delete(id);
 	}
+	private Visitante refazerVisitante(ResultSet res) {
+		Visitante aux;
+		
+		while(res.next()) {
+			
+		}
+	}
 	
+	//  CRUD ASSOCIADO  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public Associado pesquisarAssociado(int id) {
 		return bancoDados.findById(id);
 	}
