@@ -21,6 +21,15 @@ public abstract class Pessoa {
 		this.email = email;
 		this.celular = celular;
 	}
+	
+	
+
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	public String getNome() {
 		return nome;
@@ -31,6 +40,9 @@ public abstract class Pessoa {
 
 	public String getCpf() {
 		return cpf;
+	}
+	public void setCpf(String cpf) {
+		this.cpf = cpf;
 	}
 
 	public String getEmail() {

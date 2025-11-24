@@ -19,7 +19,7 @@ public class Main {
 		}
 		finally {
 			System.out.println("tchau");
-			conn.close();
+			DB.closeConnection();
 		}
 		
 		

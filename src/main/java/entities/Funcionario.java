@@ -2,9 +2,11 @@ package entities;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import data.DB;
+import data.exceptions.DBExceptions;
 import jakarta.persistence.*;
 
 @Entity // MARCA COMO UMA ENTIDADE JPA E SERÁ A TABELA PRINCIPAL
@@ -30,32 +32,82 @@ public class Funcionario extends Pessoa {
 	public String toString() {
 		return super.toString() + " Funcionario [matriculaFuncionario=" + matriculaFuncionario + "]";
 	}
-	
+
 	// CRUD VISITANTE  ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	public Visitante pesquisarVisitante(int id) { //nas funções PESQUISAR seria sim interessante ter DAOs, mas isso é referência pro futuro
-		Connection conn = DB.getConnection();
-		Statement state = conn.createStatement();
-		ResultSet res = state.executeQuery(String.format("SELECT * FROM funcionarios WHERE funcionario.id = %s", id));
-		
-		return refazerVisitante(res);
+	// PESQUISAR VISITANTE  ---------------
+	public Visitante pesquisarVisitante(int id) throws SQLException { //nas funções PESQUISAR seria sim interessante ter DAOs, mas isso é referência pro futuro
+		try {
+			Connection conn = DB.getConnection();
+			Statement state = conn.createStatement();
+			ResultSet res = state.executeQuery(String.format("SELECT * FROM funcionarios WHERE funcionario.id = %s", id));
+
+			return refazerVisitante(res);
+		}
+		catch(SQLException e) {
+			throw new DBExceptions(e.getMessage());
+		}
+		finally {
+			DB.closeConnection();
+		}
 	}
-	public boolean adicionarVisitante(Visitante vis) {
-		return bancoDados.add(vis);
+	// ADICIONAR VISITANTE ----------------
+	public boolean adicionarVisitante(Visitante vis) throws SQLException {
+		if(pesquisarVisitante(vis.getId()) == null) {
+			return false;
+		}
+		else {
+			try {
+				Connection conn = DB.getConnection();
+				Statement state = conn.createStatement();
+				ResultSet res = state.executeQuery(String.format("INSERT INTO visitantes (%s, %s, %s, %s, %f)", vis.getNome(), vis.getCpf(), vis.getEmail(), vis.getCelular(), vis.getDivida()));
+
+				return true;
+			}
+			finally {
+				DB.closeConnection();
+			}
+		}
 	}
+	// ALTERAR VISITANTE ---------------------
 	public boolean alterarVisitante(int id) {
 		return bancoDados.update(id);
 	}
-	public boolean excluirVisitante(int id) {
-		return bancoDados.delete(id);
-	}
-	private Visitante refazerVisitante(ResultSet res) {
-		Visitante aux = new Visitante();
-		
-		while(res.next()) {
-			aux.setNome(res.getString("Nome"));
+	// EXCLUIR VISITANTE ---------------------
+	public boolean excluirVisitante(int id) throws SQLException {
+		if(pesquisarVisitante(id) == null) {
+			return false;
+		}
+		else {
+			try {
+				Connection conn = DB.getConnection();
+				Statement state = conn.createStatement();
+				ResultSet res = state.executeQuery(String.format("DELETE FROM visitantes WHERE id = %d", id));
+			}
+			finally {
+				DB.closeConnection();
+			}
+			return true;
 		}
 	}
-	
+	// EXTRA, REFAZER VISITANTE (como a ideia é retornar um Visitante, mas o ResultSet precisa ser iterado coluna por coluna, esta função itera a linha do RS e monta o Visitante para retorno)
+	private Visitante refazerVisitante(ResultSet res) throws SQLException {
+		Visitante aux = new Visitante();
+
+		if(!res.next()) {
+			return null;
+		}
+		else {
+			aux.setId(res.getInt("Id"));
+			aux.setNome(res.getString("Nome"));
+			aux.setCpf(res.getString("cpf"));
+			aux.setEmail(res.getString("email"));
+			aux.setCelular(res.getString("celular"));
+			aux.setDivida(res.getDouble("divida"));
+		}
+		return aux;
+	}
+}
+
 	//  CRUD ASSOCIADO  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public Associado pesquisarAssociado(int id) {
 		return bancoDados.findById(id);
