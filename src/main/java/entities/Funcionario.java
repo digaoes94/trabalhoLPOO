@@ -8,28 +8,46 @@ import jakarta.persistence.Table;
 @Table(name = "funcionarios")
 public class Funcionario extends Pessoa {
 
-	@Column(name = "matricula_funcionario", nullable = false, unique = true)
-	private String matriculaFuncionario;
+    @Column(name = "matricula_funcionario", nullable = false, unique = true)
+    private String matriculaFuncionario;
 
-	public Funcionario() {
+    @Column(nullable = false)
+    private String senha;
+    
+    public Funcionario() {
+        super();
+    }
 
-	}
+    // --- CONSTRUTOR SEM SENHA (Legado/Opcional) ---
+    public Funcionario(String nome, String cpf, String email, String celular, String matriculaFuncionario) {
+        super(nome, cpf, email, celular);
+        this.matriculaFuncionario = matriculaFuncionario;
+    }
 
-	public Funcionario(String nome, String cpf, String email, String celular, String matriculaFuncionario) {
-		super(nome, cpf, email, celular);
-		this.matriculaFuncionario = matriculaFuncionario;
-	}
+    // --- CONSTRUTOR COMPLETO (Usado na Tela de Cadastro) ---
+    public Funcionario(String nome, String cpf, String email, String celular, String matriculaFuncionario, String senha) {
+        super(nome, cpf, email, celular);
+        this.matriculaFuncionario = matriculaFuncionario;
+        this.senha = senha;
+    }
 
-	public String getMatriculaFuncionario() {
-		return matriculaFuncionario;
-	}
+    public String getMatriculaFuncionario() {
+        return matriculaFuncionario;
+    }
 
-	public void setMatriculaFuncionario(String matriculaFuncionario) {
-		this.matriculaFuncionario = matriculaFuncionario;
-	}
+    public void setMatriculaFuncionario(String matriculaFuncionario) {
+        this.matriculaFuncionario = matriculaFuncionario;
+    }
+    public String getSenha() {
+        return senha;
+    }
 
-	@Override
-	public String toString() {
-		return "Funcionario [id=" + getId() + ", nome=" + getNome() + ", matricula=" + matriculaFuncionario + "]";
-	}
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    @Override
+    public String toString() {
+        return "Funcionario [id=" + getId() + ", nome=" + getNome() + ", matricula=" + matriculaFuncionario + "]";
+    }
 }

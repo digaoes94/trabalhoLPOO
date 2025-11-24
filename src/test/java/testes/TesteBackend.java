@@ -1,4 +1,6 @@
-package aplication;
+package testes;
+
+
 
 import dao.EmprestimoDAO;
 import dao.LivroDAO;
@@ -7,7 +9,7 @@ import data.JPAUtil;
 import entities.Livro;
 import entities.Visitante;
 
-public class Main {
+public class TesteBackend {
 
 	public static void main(String[] args) {
 
