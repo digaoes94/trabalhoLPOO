@@ -1,38 +1,48 @@
 package entities;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-
-import data.DB;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 
-@MappedSuperclass
+@Entity
+@Table(name = "documentos")
+@Inheritance(strategy = InheritanceType.JOINED) // CRIA A TABELA "documento" E AS TABELAS FILHAS LIGADAS POR ID
 public abstract class Documento {
-	@Id @GeneratedValue(strategy = GenerationType.IDENTITY) protected int id;
-	
-	@Column(nullable = false) private String nome;
-	private String genero, descricao, localizacao;
 
-	public Documento(String nome, String genero, String descricao, String localizacao) {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	protected Integer id;
+
+	@Column(nullable = false)
+	private String nome;
+
+	private String genero;
+
+	@Column(length = 500)
+	private String descricao;
+
+	public Documento() {
+	}
+
+	public Documento(String nome, String genero, String descricao) {
 		this.nome = nome;
 		this.genero = genero;
 		this.descricao = descricao;
-		this.localizacao = localizacao;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	public String getNome() {
 		return nome;
 	}
+
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
@@ -40,6 +50,7 @@ public abstract class Documento {
 	public String getGenero() {
 		return genero;
 	}
+
 	public void setGenero(String genero) {
 		this.genero = genero;
 	}
@@ -47,37 +58,14 @@ public abstract class Documento {
 	public String getDescricao() {
 		return descricao;
 	}
+
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 
-	public String getLocalizacao() {
-		return localizacao;
-	}
-	public void setLocalizacao(String localizacao) {
-		this.localizacao = localizacao;
-	}
-	
 	@Override
 	public String toString() {
-		return "Documento [id=" + id + ", nome=" + nome + ", genero=" + genero + ", descricao=" + descricao
-				+ ", localizacao=" + localizacao + "]";
+		return "Documento [id=" + id + ", nome=" + nome + ", genero=" + genero + ", descricao=" + descricao;
 	}
 
-	public ArrayList<String> verEmprestimos() {
-		ArrayList<Object> lista;
-		String row;
-		
-		Connection conn = DB.getConnection();
-		Statement state = conn.createStatement();
-		ResultSet res;
-		
-		res = state.executeQuery("SELECT * FROM emprestimos");
-		
-		while(res.next()) {
-			
-		}
-		
-		return bancoDados.findAll(id);
-	}
 }

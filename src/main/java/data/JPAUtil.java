@@ -1,4 +1,4 @@
-package dto;
+package data;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;

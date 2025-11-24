@@ -1,39 +1,37 @@
 package entities;
 
 import entities.interfaces.DocDigital;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-@Entity @Table(name = "pdfs")
-public class PDF extends Documento implements DocDigital{
-	public static Boolean executavel = false;
+@Entity
+@Table(name = "pdfs")
+public class PDF extends Documento implements DocDigital {
 
-	public PDF(String nome, String genero, String descricao, String localizacao) {
-		super(nome, genero, descricao, localizacao);
-	}
+	@Column(name = "is_executavel")
+	private Boolean executavel;
 
-	public static Boolean getExecutavel() {
-		return executavel;
+	public PDF() {
 	}
 
-	@Override
-	public String toString() {
-		return "PDF [getNome()=" + getNome() + ", getGenero()=" + getGenero() + ", getDescricao()=" + getDescricao()
-				+ ", getLocalizacao()=" + getLocalizacao() + ", toString()=" + super.toString() + "]";
-	}
-	
-	public PDF pesquisarPDF(int id) {
-		return bancoDados.findById(id);
-	}
-	public boolean adicionarPDF(PDF pdf) {
-		return bancoDados.add(pdf);
-	}
-	public boolean excluirPDF(int id) {
-		return bancoDados.delete(pesquisarPDF(id));
+	public PDF(String nome, String genero, String descricao, Boolean executavel) {
+		super(nome, genero, descricao);
+		this.executavel = executavel;
 	}
 
 	@Override
-	public void executar() {
-		System.out.println("Abrindo o PDF no Adobe Acrobat.");
-	}
+    public Boolean getExecutavel() {
+        return executavel;
+    }
+
+    @Override
+    public void setExecutavel(Boolean executavel) {
+        this.executavel = executavel;
+    }
+
+    @Override
+    public void executar() {
+        System.out.println("Abrindo o PDF: " + this.getNome());
+    }
 }

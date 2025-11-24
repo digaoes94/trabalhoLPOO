@@ -1,39 +1,38 @@
 package entities;
 
 import entities.interfaces.DocDigital;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 
-@Entity @Table(name = "dvds")
-public class DVD extends Documento implements DocDigital{
-	public static Boolean executavel = true;
+@Entity
+@Table(name = "dvds")
+public class DVD extends Documento implements DocDigital {
 
-	public DVD(String nome, String genero, String descricao, String localizacao) {
-		super(nome, genero, descricao, localizacao);
+	@Column(name = "is_executavel")
+	private Boolean executavel;
+
+	public DVD() {
 	}
 
-	public static Boolean getExecutavel() {
+	public DVD(String nome, String genero, String descricao, Boolean executavel) {
+		super(nome, genero, descricao);
+		this.executavel = executavel;
+	}
+
+	@Override
+	public Boolean getExecutavel() {
 		return executavel;
 	}
 
 	@Override
-	public String toString() {
-		return "DVD [getNome()=" + getNome() + ", getGenero()=" + getGenero() + ", getDescricao()=" + getDescricao()
-				+ ", getLocalizacao()=" + getLocalizacao() + ", toString()=" + super.toString();
-	}
-	
-	public DVD pesquisarDVD(int id) {
-		return bancoDados.findById(id);
-	}
-	public boolean adicionarDVD(DVD dvd) {
-		return bancoDados.add(dvd);
-	}
-	public boolean excluirDVD(int id) {
-		return bancoDados.delete(pesquisarDVD(id));
+	public void setExecutavel(Boolean executavel) {
+		this.executavel = executavel;
 	}
 
 	@Override
 	public void executar() {
-		System.out.println("Tocando vídeo no Windows Music Player.");		
+		System.out.println("Executando o DVD: " + this.getNome());
 	}
+
 }

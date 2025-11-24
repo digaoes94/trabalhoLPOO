@@ -1,5 +1,10 @@
 package entities.interfaces;
 
 public interface DocFisico {
-	public String localizar();
+    
+	// OBRIGA A CLASSE (LIVRO, REVISTA) A TER UM JEITO DE PEGAR/GRAVAR A LOCALIZAÇÃO.
+    String getLocalizacao();
+    void setLocalizacao(String localizacao);
+    
+    String localizar(); 
 }

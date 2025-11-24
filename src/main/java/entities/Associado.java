@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 @Entity // MARCA COMO UMA ENTIDADE JPA E SERÁ A TABELA PRINCIPAL
 @Table(name = "associados")
+@PrimaryKeyJoinColumn(name = "id") // REFORÇA QUE O ID É O MESMO DO VISITANTE
 public class Associado extends Visitante {
 
 	@Column(name = "matricula_do_associado", nullable = false, unique = true)
@@ -13,6 +14,9 @@ public class Associado extends Visitante {
 	private String senha;
 
 
+	public Associado() {
+	}
+	
 	public Associado(Visitante vis, String matriculaAssociado, String senha) {
 		super(vis.getNome(), vis.getCpf(), vis.getEmail(), vis.getCelular());
 		this.divida = vis.getDivida();

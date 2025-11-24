@@ -22,9 +22,7 @@ public abstract class Pessoa {
 		this.celular = celular;
 	}
 	
-	
-
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 	public void setId(int id) {
