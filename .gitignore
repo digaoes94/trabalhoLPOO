@@ -1,5 +1,4 @@
 # --- Maven (Arquivos de Build) ---
-*.log
 dependency-reduced-pom.xml
 
 # --- Eclipse (Arquivos de IDE) ---
