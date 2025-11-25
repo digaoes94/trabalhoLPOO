@@ -124,7 +124,6 @@ public class TelaLogin extends javax.swing.JFrame {
                 // 1. Abre a tela principal
                 TelaPrincipal principal = new TelaPrincipal();
                 principal.setVisible(true);
-                principal.setSize(1024, 768);
 
                 // 2. Fecha a tela de login
                 this.dispose();
@@ -155,9 +154,48 @@ public class TelaLogin extends javax.swing.JFrame {
             System.err.println("Falha ao iniciar o tema FlatLaf.");
         }
 
-        /* Create and display the form */
+        // -----------------------------------
+        //CRIA UM ADMIN PADRÃO 
+        // -----------------------------------
+        try {
+            // Instancia o DAO
+            dao.FuncionarioDAO dao = new dao.FuncionarioDAO();
+
+            // Verifica se o usuário "admin" já existe
+            entities.Funcionario admin = dao.buscarPorMatricula("admin");
+
+            // Se retornou null, significa que não existe. Vamos criar!
+            if (admin == null) {
+                System.out.println(">>> Banco vazio detectado. Criando usuário Admin padrão...");
+
+                // Cria o objeto (Nome, CPF, Email, Celular, Matrícula, Senha)
+                // USE CPFs e DADOS FICTÍCIOS QUE PASSEM NA SUA REGRA DE BANCO
+                entities.Funcionario novoAdmin = new entities.Funcionario(
+                        "Administrador do Sistema",
+                        "000.000.000-00",
+                        "admin@sistema.com",
+                        "(00) 0000-0000",
+                        "admin", // <--- LOGIN
+                        "admin" // <--- SENHA
+                );
+
+                dao.salvar(novoAdmin);
+                System.out.println(">>> Usuário Admin criado com sucesso!");
+            } else {
+                System.out.println(">>> Usuário Admin já existe. Pulando criação.");
+            }
+
+            dao.fechar();
+
+        } catch (Exception e) {
+            // Se der erro (ex: banco fora do ar), avisa no console mas tenta abrir a tela
+            System.err.println("Erro ao verificar admin: " + e.getMessage());
+            // e.printStackTrace(); 
+        }
+        // -------------------------------------------------------
+
+        /* Abre a janela de Login */
         java.awt.EventQueue.invokeLater(() -> {
-            // Centraliza a janela ao abrir (Dica extra de design!)
             TelaLogin tela = new TelaLogin();
             tela.setLocationRelativeTo(null);
             tela.setVisible(true);
