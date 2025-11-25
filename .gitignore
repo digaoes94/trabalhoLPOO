@@ -1,5 +1,4 @@
 # --- Maven (Arquivos de Build) ---
-target/
 *.log
 dependency-reduced-pom.xml
 
